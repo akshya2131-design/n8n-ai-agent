@@ -1,0 +1,148 @@
+{
+  "name": "BuildAIagent",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d865115a-10d1-4602-aafb-c6e3c3ffd3a9",
+      "name": "When chat message received",
+      "webhookId": "c5be541e-8fdf-4c1e-b46b-05f3a83a9d1e"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=you are a website content researcher and your work is to analyze this website and tell what this website do and what are the services it provide\n\noutput should not exceed 100 words"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "b7fb0082-907d-452c-8d68-212348e0af19",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        296,
+        224
+      ],
+      "id": "04f30fa1-90cf-4d53-97cf-0a5ac7805623",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "DMdaih0Is4QHCXPE",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "options": {
+          "systemMessage": "=You are a competitive market research AI agent.\n\nYour task is to analyze the company or website provided by the user and identify the top 3 competitors.\n\nFor each competitor, provide:\n\n1. Company Name\n2. Website URL\n3. Short description of the company\n4. Estimated Annual Revenue (latest available)\n5. Estimated Net Worth / Valuation (latest available)\n\nInstructions:\n- Use reliable and recent web sources.\n- Return accurate business competitors only.\n- If exact revenue or net worth is unavailable, provide estimated ranges.\n- Format the response clearly in a table.\n- Keep the response professional and concise.\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        576,
+        0
+      ],
+      "id": "4095a621-f402-488e-80e4-db56e492ac76",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        648,
+        224
+      ],
+      "id": "35cace04-4831-460e-ac7c-d4d175e5b561",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "DMdaih0Is4QHCXPE",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "647e51f6-693b-475d-ac52-9df97de3ba06",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7fe3328b220fc694e63296c563b3c18c3c7200ecf9bde2c0d4bfd4f134664e51"
+  },
+  "id": "VLdXeSm3KmRFmT2e",
+  "tags": []
+}
